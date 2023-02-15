@@ -1,4 +1,6 @@
 import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +10,7 @@ public class Game{
 	private int x;
 	private int y;
 	private int z;
+	private int delay;
 	private boolean isQuit;
 	public static void main (String[] args)throws Exception{
 		Game game = new Game();
@@ -28,15 +31,23 @@ public class Game{
 		board.swapIndex(1, 3);
 		board.swapIndex(2, 3);
 		board.printBoard();
-		while (this.isQuit == false){
+		//while (this.isQuit == false){
 			Board currentBoard = board.getBoard();
 			Board newBoard = this.getNextBoard(currentBoard);
 			System.out.println("");
 			System.out.println("");
 			newBoard.printBoard();
-			Thread.sleep(100);
+			Thread.sleep(this.getDelay());
 			this.saveGameBoard(newBoard);
-		}
+			File givenFile = new File(this.getInput());
+                	System.out.println(this.decodeLoad(givenFile));
+		//}
+	}
+	public void setDelay(int delay){
+		this.delay = delay;
+	}
+	public int getDelay(){
+		return this.delay;
 	}
 	public void saveGameBoard(Board board)throws Exception{
 		String name = this.getInput();
@@ -65,7 +76,6 @@ public class Game{
 		}
 		int counter = 1;
 		for (int i = 1; i < line.length(); i++){
-			System.out.println(i);
 			String specificCharacter = String.valueOf(line.charAt(i));
 			boolean tempBool = full;
 			if (specificCharacter.equals("0")){
@@ -91,7 +101,61 @@ public class Game{
 			}
 		}
 		writer.close();
-		System.out.println(line);
+	}
+	//will return a list of coordinates to swap
+	public List<Integer> decodeLoad(File file) throws Exception{
+		List<Integer> decoded = new ArrayList<>();
+		Scanner scan = new Scanner(file);
+		List<String> contents = new ArrayList<>();
+		while (scan.hasNextLine()){
+			contents.add(scan.nextLine());
+		}
+		String[] dimensions = contents.get(0).split(",");
+		int height = Integer.valueOf(dimensions[0]);
+		int width = Integer.valueOf(dimensions[1]);
+		String code = contents.get(1);
+		boolean full = false;
+		String number = "";
+		int currentRow = 0;
+		int currentColumn = 0;
+		int total = 0;
+		for (int i = 0; i < code.length(); i++){
+			char charac = code.charAt(i);
+			String character = Character.toString(charac);
+			if (Character.isLetter(charac)){
+				if (i!=0){
+					int value = Integer.valueOf(number);
+					number  = "";
+					if (full){
+						for (int j = 0; j < value; j++){
+							decoded.add(currentRow);
+							decoded.add(currentColumn);
+							currentColumn++;
+							if (currentColumn == width + 1){
+								currentColumn = 0;
+								currentRow++;
+							}
+						}
+						total+= value;
+					} else {
+						total += value;
+						currentRow = total/height;
+						currentColumn = total%width;
+					}
+				}
+				if (character.equals("f")){
+					full = true;
+				} else {
+					full = false;
+				}
+			} else {
+				number+= character;
+			}
+			if (i == code.length() - 1){
+				int finalValue = Integer.valueOf(number);
+			}
+		}
+		return decoded;
 	}
 	public Board getNextBoard(Board board) throws Exception{
 		Board newBoard = new Board();
@@ -127,7 +191,7 @@ public class Game{
 		}*/
 		return newBoard;
 	}
-	public int scanBoard(Board board, int x, int y){
+	public int scanBoard(Board board, int y, int x){
 		int number = 0;
 		for (int i = -1; i <=1; i++){
 			for (int j = -1; j <=1; j++){
@@ -135,8 +199,8 @@ public class Game{
 				if (i==0 && j==0){
 					number = number;
 				} else {
-					int xCo = x + i;
-					int yCo = y + j;
+					int yCo = y + i;
+					int xCo = x + j;
 					//toroidality
 					if (xCo == -1){
 						xCo = board.getWidth() - 1;
@@ -150,7 +214,7 @@ public class Game{
 					if (yCo == board.getHeight()){
 						yCo = 0;
 					}
-					if (board.getIndex(xCo, yCo)){
+					if (board.getIndex(yCo, xCo)){
 						number++;
 					}
 				}
