@@ -1,3 +1,8 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileWriter;
 import java.util.*;
 public class Game{
 	private int x;
@@ -29,8 +34,64 @@ public class Game{
 			System.out.println("");
 			System.out.println("");
 			newBoard.printBoard();
-			Thread.sleep(1000);
+			Thread.sleep(100);
+			this.saveGameBoard(newBoard);
 		}
+	}
+	public void saveGameBoard(Board board)throws Exception{
+		String name = this.getInput();
+		File file = new File(name);
+		BufferedWriter writer = new BufferedWriter(new FileWriter(name));
+		writer.write(board.getHeight() + "," + board.getWidth());
+		writer.newLine();
+		String line = "";
+		for (int i = 0; i < board.getHeight(); i++){
+			for (int j = 0; j < board.getWidth(); j++){
+				if (board.getIndex(i,j)){
+					line+= "1";
+				} else {
+					line+= "0";
+				}
+			}
+		}
+		boolean full;
+		String character = String.valueOf(line.charAt(0));
+		if (character.equals("0")){
+			writer.append("e");
+			full = false;
+		} else{
+			writer.append("f");
+			full = true;
+		}
+		int counter = 1;
+		for (int i = 1; i < line.length(); i++){
+			System.out.println(i);
+			String specificCharacter = String.valueOf(line.charAt(i));
+			boolean tempBool = full;
+			if (specificCharacter.equals("0")){
+				full = false;
+				counter ++;
+			} else {
+				full = true;
+				counter ++;
+			}
+			if (tempBool != full && i != 0){
+				String value = Integer.toString(counter - 1);
+				writer.write(value);
+				if (full){
+					writer.append("f");
+				} else {
+					writer.append("e");
+				}
+				counter= 1;
+			}
+			if (i == line.length() - 1){
+				String finalValue = Integer.toString(counter);
+				writer.write(finalValue);
+			}
+		}
+		writer.close();
+		System.out.println(line);
 	}
 	public Board getNextBoard(Board board) throws Exception{
 		Board newBoard = new Board();
