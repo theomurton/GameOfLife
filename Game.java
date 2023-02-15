@@ -17,13 +17,17 @@ public class Game{
 		this.setX();
 		this.setY();
 		this.setZ();
+		board.swapIndex(1, 1);
+		board.swapIndex(0,2);
+		board.swapIndex(0, 3);
+		board.swapIndex(1, 3);
 		board.swapIndex(2, 3);
-		board.swapIndex(3, 1);
-		board.swapIndex(2, 2);
 		board.printBoard();
 		while (this.isQuit == false){
 			Board currentBoard = board.getBoard();
 			Board newBoard = this.getNextBoard(currentBoard);
+			System.out.println("");
+			System.out.println("");
 			newBoard.printBoard();
 			Thread.sleep(1000);
 		}
