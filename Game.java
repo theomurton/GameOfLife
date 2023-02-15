@@ -4,12 +4,12 @@ public class Game{
 	private int y;
 	private int z;
 	private boolean isQuit;
-	public static void main(String[] args){
+	public static void main (String[] args)throws Exception{
 		Game game = new Game();
 		Board board = new Board();
 		game.playGame(board);
 	}
-	public void playGame(Board board){
+	public void playGame (Board board) throws Exception{
 		this.setBoardHeight(board);
 		this.setBoardWidth(board);
 		board.setBoardSize(board.getHeight(), board.getWidth());
@@ -17,17 +17,40 @@ public class Game{
 		this.setX();
 		this.setY();
 		this.setZ();
-// while loop
-			boolean[][] currentBoard = board.getBoard();
-			boolean[][] newBoard = this.getNextBoard(currentBoard);
+		board.swapIndex(2, 3);
+		board.swapIndex(3, 1);
+		board.swapIndex(2, 2);
+		board.printBoard();
+		while (this.isQuit == false){
+			Board currentBoard = board.getBoard();
+			Board newBoard = this.getNextBoard(currentBoard);
+			newBoard.printBoard();
+			Thread.sleep(1000);
+		}
 	}
-	public boolean[][] getNextBoard(boolean[][] board){
-		boolean[][] newBoard = board;
-		int[][] filled = new int[board.length][board[0].length];
-		for (int i = 0; i < board.length; i++){
-			for (int j = 0; j < board.length; j++){
+	public Board getNextBoard(Board board) throws Exception{
+		Board newBoard = new Board();
+		newBoard.setHeight(board.getHeight());
+		newBoard.setWidth(board.getWidth());
+		newBoard.setArray(board.getArray());
+		int[][] filled = new int[board.getHeight()][board.getWidth()];
+		for (int i = 0; i < board.getHeight(); i++){
+			for (int j = 0; j < board.getWidth(); j++){
 				int numberFilled = this.scanBoard(board, i, j);
 				filled[i][j] = numberFilled;
+			}
+		}
+		for (int i = 0; i < board.getHeight(); i++){
+			for (int j = 0; j < board.getWidth(); j++){
+				if (board.getIndex(i,j) == true && filled[i][j] < this.x){
+					newBoard.swapIndex(i, j);
+				} else if (board.getIndex(i,j) == true && filled[i][j] >= this.x && filled[i][j] <= this.y){
+					//nothing happens
+				} else if (board.getIndex(i,j) == true && filled[i][j] > this.y){
+					newBoard.swapIndex(i,j);
+				} else if (board.getIndex(i,j) == false && filled[i][j] == this.z){
+					newBoard.swapIndex(i,j);
+				}
 			}
 		}
 		//this will be removed, just showing how many are touching each square.
@@ -39,7 +62,7 @@ public class Game{
 		}*/
 		return newBoard;
 	}
-	public int scanBoard(boolean[][] board, int x, int y){
+	public int scanBoard(Board board, int x, int y){
 		int number = 0;
 		for (int i = -1; i <=1; i++){
 			for (int j = -1; j <=1; j++){
@@ -51,18 +74,18 @@ public class Game{
 					int yCo = y + j;
 					//toroidality
 					if (xCo == -1){
-						xCo = board.length - 1;
+						xCo = board.getWidth() - 1;
 					}
 					if (yCo == -1){
-						yCo = board.length - 1;
+						yCo = board.getHeight() - 1;
 					}
-					if (xCo == board.length){
+					if (xCo == board.getWidth()){
 						xCo = 0;
 					}
-					if (yCo == board.length){
+					if (yCo == board.getHeight()){
 						yCo = 0;
 					}
-					if (board[xCo][yCo]){
+					if (board.getIndex(xCo, yCo)){
 						number++;
 					}
 				}
