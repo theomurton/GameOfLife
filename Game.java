@@ -13,22 +13,35 @@ public class Game{
 	private boolean isQuit;
 	public static void main (String[] args)throws Exception{
 		Game game = new Game();
-		Board board = new Board();
-		game.playGame(board);
+		game.playGame();
 	}
-	public void playGame (Board board) throws Exception{
-		this.setBoardHeight(board);
-		this.setBoardWidth(board);
-		board.setBoardSize(board.getHeight(), board.getWidth());
-		board.printBoard();
-		this.setX();
-		this.setY();
-		this.setZ();
-		//initial setting
-		System.out.println("Supply file name for loading board.");
-		File givenFile = new File(this.getInput());
-                Board loadedBoard = this.loadBoard(this.decodeLoad(givenFile));
-		board.printBoard();
+	public void playGame () throws Exception{
+		System.out.println("Type 'new' for new board or 'load' to load existing board.");
+		String input = this.getInput();
+		while (!input.equals("new") && !input.equals("load")){
+			input = this.getInput();
+		}
+		Board board;
+		if (input.equals("new")){
+			board = new Board();
+			this.setBoardHeight(board);
+                	this.setBoardWidth(board);
+                	board.setBoardSize(board.getHeight(), board.getWidth());
+                	board.printBoard();
+                	this.setX();
+                	this.setY();
+                	this.setZ();
+			board.swapIndex(0,0);
+			board.swapIndex(0,2);
+			board.swapIndex(1,1);
+			board.swapIndex(1,2);
+			board.swapIndex(2,1);
+		} else {
+			System.out.println("Supply file name for loading board.");
+                	File givenFile = new File(this.getInput());
+			board = this.loadBoard(this.decodeLoad(givenFile));
+			board.printBoard();
+		}
 		while (this.isQuit == false){
 			Board currentBoard = board.getBoard();
 			Board newBoard = this.getNextBoard(currentBoard);
