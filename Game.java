@@ -1,5 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.BufferedReader;
+import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.File;
@@ -25,6 +24,7 @@ public class Game{
 		this.setX();
 		this.setY();
 		this.setZ();
+		//initial setting
 		board.swapIndex(1, 1);
 		board.swapIndex(0,2);
 		board.swapIndex(0, 3);
@@ -37,11 +37,13 @@ public class Game{
 			System.out.println("");
 			System.out.println("");
 			newBoard.printBoard();
-			Thread.sleep(this.getDelay());
+			Thread.sleep(100);
+			System.out.println("supply name for save file.");
 			this.saveGameBoard(newBoard);
+			System.out.println("supply file to load.");
 			File givenFile = new File(this.getInput());
                 	System.out.println(this.decodeLoad(givenFile));
-		//}
+	//	}
 	}
 	public void setDelay(int delay){
 		this.delay = delay;
@@ -119,6 +121,7 @@ public class Game{
 		int currentRow = 0;
 		int currentColumn = 0;
 		int total = 0;
+		System.out.println(width);
 		for (int i = 0; i < code.length(); i++){
 			char charac = code.charAt(i);
 			String character = Character.toString(charac);
@@ -131,16 +134,21 @@ public class Game{
 							decoded.add(currentRow);
 							decoded.add(currentColumn);
 							currentColumn++;
-							if (currentColumn == width + 1){
+							if (currentColumn == width){
 								currentColumn = 0;
 								currentRow++;
+								System.out.println("row raised " + i + j);
 							}
 						}
 						total+= value;
+						System.out.println(total + "fulltotal");
 					} else {
 						total += value;
-						currentRow = total/height;
+						System.out.println(total + "total");
+						currentRow = total/width;
+						System.out.println(currentRow + "row");
 						currentColumn = total%width;
+						System.out.println(currentColumn + "column");
 					}
 				}
 				if (character.equals("f")){
@@ -153,6 +161,17 @@ public class Game{
 			}
 			if (i == code.length() - 1){
 				int finalValue = Integer.valueOf(number);
+				if (full){
+					for (int j = 0; j < finalValue; j++){
+						decoded.add(currentRow);
+						decoded.add(currentColumn);
+						if (currentColumn == width + 1){
+                                                                currentColumn = 0;
+                                                                currentRow++;
+                                                                System.out.println("row raised " + i + j);
+                                                        }
+					}
+				}
 			}
 		}
 		return decoded;
