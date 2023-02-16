@@ -28,9 +28,12 @@ public class Game{
                 	this.setBoardWidth(board);
                 	board.setBoardSize(board.getHeight(), board.getWidth());
                 	board.printBoard();
-                	this.setX();
-                	this.setY();
-                	this.setZ();
+                	this.x = setVariable(x, "x");
+                	this.y = setVariable(y, "y");
+					this.z = setVariable(z, "z");
+					//this.setX();
+					//this.setY();
+                	//this.setZ();
 			board.swapIndex(0,0);
 			board.swapIndex(0,2);
 			board.swapIndex(1,1);
@@ -258,9 +261,9 @@ public class Game{
 		}
 		return number;
 	}
-	public void setX(){
-		while (this.x < 1 || this.x > 9){
-			System.out.println("Supply x, 1 <= x <= 9");
+	public int setVariable(int variable, String type){
+		while (variable < 1 || variable > 9){
+			System.out.println("Supply " + type + ", 1 <= " + type + " <= 9");
 			boolean good = true;
 			int input = -1;
 			try{
@@ -270,44 +273,11 @@ public class Game{
 				good = false;
 			}
 			if (good){
-				this.x = input;
+				variable = input;
 			}
 		}
-		System.out.println("x is: " + this.x);
-	}
-	public void setY(){
-		while (this.y < 1 || this.y > 9){
-			System.out.println("Supply y, 1 <= y <= 9");
-			boolean good = true;
-			int input = -1;
-			try{
-				input = Integer.parseInt(getInput());
-			} catch(Exception e){
-				System.out.println("Bad format, re-enter please");
-				good = false;
-			}
-			if (good){
-				this.y = input;
-			}
-		}
-		System.out.println("y is: " + this.y);
-	}
-	public void setZ(){
-		while (this.z < 1 || this.z > 9){
-			System.out.println("Supply z, 1 <= z <= 9");
-			boolean good = true;
-			int input = -1;
-			try{
-				input = Integer.parseInt(getInput());
-			} catch(Exception e){
-				System.out.println("Bad format, re-enter please");
-				good = false;
-			}
-			if (good){
-				this.z = input;
-			}
-		}
-		System.out.println("z is: " + this.z);
+		System.out.println(type + " is: " + variable);
+		return variable;
 	}
 	public String getInput(){
 		Scanner scan = new Scanner(System.in);
