@@ -41,11 +41,11 @@ public class Board implements Cloneable{
 	public boolean getIndex(int x, int y){
 		return this.board[x][y];
 	}
-	public void swapIndex(int x, int y){
-		if (this.board[x][y]){
-			this.board[x][y] = false;
+	public void swapIndex(int y, int x){
+		if (this.board[y][x]){
+			this.board[y][x] = false;
 		} else {
-			this.board[x][y] = true;
+			this.board[y][x] = true;
 		}
 	}
 }

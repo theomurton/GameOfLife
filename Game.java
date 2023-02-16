@@ -25,25 +25,18 @@ public class Game{
 		this.setY();
 		this.setZ();
 		//initial setting
-		board.swapIndex(1, 1);
-		board.swapIndex(0,2);
-		board.swapIndex(0, 3);
-		board.swapIndex(1, 3);
-		board.swapIndex(2, 3);
+		System.out.println("Supply file name for loading board.");
+		File givenFile = new File(this.getInput());
+                Board loadedBoard = this.loadBoard(this.decodeLoad(givenFile));
 		board.printBoard();
-		//while (this.isQuit == false){
+		while (this.isQuit == false){
 			Board currentBoard = board.getBoard();
 			Board newBoard = this.getNextBoard(currentBoard);
 			System.out.println("");
 			System.out.println("");
 			newBoard.printBoard();
 			Thread.sleep(100);
-			System.out.println("supply name for save file.");
-			this.saveGameBoard(newBoard);
-			System.out.println("supply file to load.");
-			File givenFile = new File(this.getInput());
-                	System.out.println(this.decodeLoad(givenFile));
-	//	}
+		}
 	}
 	public void setDelay(int delay){
 		this.delay = delay;
@@ -121,7 +114,8 @@ public class Game{
 		int currentRow = 0;
 		int currentColumn = 0;
 		int total = 0;
-		System.out.println(width);
+		decoded.add(height);
+		decoded.add(width);
 		for (int i = 0; i < code.length(); i++){
 			char charac = code.charAt(i);
 			String character = Character.toString(charac);
@@ -137,18 +131,13 @@ public class Game{
 							if (currentColumn == width){
 								currentColumn = 0;
 								currentRow++;
-								System.out.println("row raised " + i + j);
 							}
 						}
 						total+= value;
-						System.out.println(total + "fulltotal");
 					} else {
 						total += value;
-						System.out.println(total + "total");
 						currentRow = total/width;
-						System.out.println(currentRow + "row");
 						currentColumn = total%width;
-						System.out.println(currentColumn + "column");
 					}
 				}
 				if (character.equals("f")){
@@ -168,13 +157,28 @@ public class Game{
 						if (currentColumn == width + 1){
                                                                 currentColumn = 0;
                                                                 currentRow++;
-                                                                System.out.println("row raised " + i + j);
                                                         }
 					}
 				}
 			}
 		}
 		return decoded;
+	}
+	public Board loadBoard(List<Integer> input){
+		List<Integer> decoded = new ArrayList<>(input);
+		Board loadingBoard = new Board();
+		loadingBoard.setHeight(decoded.get(0));
+		decoded.remove(0);
+		loadingBoard.setWidth(decoded.get(0));
+		decoded.remove(0);
+		System.out.println(decoded);
+		loadingBoard.setBoardSize(loadingBoard.getHeight(), loadingBoard.getWidth());
+		loadingBoard.printBoard();
+		for (int i = 0; i < decoded.size(); i = i+2){
+			System.out.println("done " + i);
+			loadingBoard.swapIndex(decoded.get(i), decoded.get(i+1));
+		}
+		return loadingBoard;
 	}
 	public Board getNextBoard(Board board) throws Exception{
 		Board newBoard = new Board();
