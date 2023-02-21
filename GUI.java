@@ -79,6 +79,7 @@ public class GUI implements ActionListener{
                 parameters[0] = Integer.parseInt((String)heightBox.getSelectedItem());
             }
         });
+        
         widthBox.addItemListener( new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
                 parameters[1] = Integer.parseInt((String)widthBox.getSelectedItem());
@@ -89,16 +90,19 @@ public class GUI implements ActionListener{
                 parameters[2] = Integer.parseInt((String)xBox.getSelectedItem());
             }
         });
+        xBox.setSelectedIndex(1);
         yBox.addItemListener( new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
                 parameters[3] = Integer.parseInt((String)yBox.getSelectedItem());
             }
         });
+        yBox.setSelectedIndex(2);
         zBox.addItemListener( new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
                 parameters[4] = Integer.parseInt((String)zBox.getSelectedItem());
             }
         });
+        zBox.setSelectedIndex(2);
 
 
 
