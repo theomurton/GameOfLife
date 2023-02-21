@@ -5,48 +5,77 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 import java.util.*;
-public class Game{
+
+import javax.swing.JButton;
+
+import java.awt.event.*;
+
+import java.awt.event.ActionListener;
+
+/*
+class GameTypeButton implements ActionListener {
+	public void actionPerformed(ActionEvent e) {
+		String choice = e.getActionCommand();
+		if (choice.equals("New Game")) {
+			System.out.println("new");
+		}
+		if (choice.equals("Load Game")) {
+			System.out.println("load");
+		}
+	}
+}
+*/
+
+public class Game {
 	private int x;
 	private int y;
 	private int z;
 	private int delay;
 	private boolean isQuit;
-	public static void main (String[] args)throws Exception{
+	private boolean gameStart = false;
+	private GUI gui;
+	private Board board;
+	public static void main (String[] args) throws Exception{
 		Game game = new Game();
 		game.playGame();
 	}
 	public void playGame () throws Exception{
-		System.out.println("Type 'new' for new board or 'load' to load existing board.");
-		String input = this.getInput();
-		while (!input.equals("new") && !input.equals("load")){
-			input = this.getInput();
-		}
-		Board board;
-		if (input.equals("new")){
-			board = new Board();
-			this.setBoardHeight(board);
-                	this.setBoardWidth(board);
-                	board.setBoardSize(board.getHeight(), board.getWidth());
-                	board.printBoard();
-                	this.x = setVariable(x, "x");
-                	this.y = setVariable(y, "y");
-					this.z = setVariable(z, "z");
-					//this.setX();
-					//this.setY();
-                	//this.setZ();
-			board.swapIndex(0,0);
-			board.swapIndex(0,2);
-			board.swapIndex(1,1);
-			board.swapIndex(1,2);
-			board.swapIndex(2,1);
-		} else {
-			System.out.println("Supply file name for loading board.");
-                	File givenFile = new File(this.getInput());
-			board = this.loadBoard(this.decodeLoad(givenFile));
-			board.printBoard();
-		}
+		this.gui = new GUI(this);
+		gui.getGameType();
+		
+	}
+	public void newGame() throws Exception {
+		
+		this.board = new Board();
+		int[] parameters = this.gui.getParameters();
+		this.board.setHeight(parameters[0]);
+		this.board.setWidth(parameters[1]);
+        this.board.setBoardSize(this.board.getHeight(), this.board.getWidth());
+            	this.board.printBoard();
+            	this.x = parameters[2];
+            	this.y = parameters[3];
+				this.z = parameters[4];
+				//this.setX();
+				//this.setY();
+            	//this.setZ();
+		this.board.swapIndex(0,0);
+		this.board.swapIndex(0,2);
+		this.board.swapIndex(1,1);
+		this.board.swapIndex(1,2);
+		this.board.swapIndex(2,1);
+		this.gameLoop();
+		
+	}
+	public void loadGame() throws Exception{
+		System.out.println("Supply file name for loading board.");
+        File givenFile = new File(this.getInput());
+		board = this.loadBoard(this.decodeLoad(givenFile));
+		board.printBoard();
+		this.gameLoop();
+	}
+	public void gameLoop() throws Exception{
 		while (this.isQuit == false){
-			Board currentBoard = board.getBoard();
+			Board currentBoard = this.board.getBoard();
 			Board newBoard = this.getNextBoard(currentBoard);
 			System.out.println("");
 			System.out.println("");
