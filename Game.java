@@ -34,6 +34,7 @@ public class Game {
 	private boolean isQuit;
 	private boolean gameStart = false;
 	private GUI gui;
+	private TheoGUI theoGUI;
 	private Board board;
 	public static void main (String[] args) throws Exception{
 		Game game = new Game();
@@ -63,6 +64,7 @@ public class Game {
 		this.board.swapIndex(1,1);
 		this.board.swapIndex(1,2);
 		this.board.swapIndex(2,1);
+		this.theoGUI = new TheoGUI(board.getHeight(), board.getWidth(), board);
 		this.gameLoop();
 		
 	}
@@ -75,11 +77,10 @@ public class Game {
 	}
 	public void gameLoop() throws Exception{
 		while (this.isQuit == false){
-			Board currentBoard = this.board.getBoard();
-			Board newBoard = this.getNextBoard(currentBoard);
+			this.updateBoard(board);
 			System.out.println("");
 			System.out.println("");
-			newBoard.printBoard();
+			board.printBoard();
 			Thread.sleep(100);
 		}
 	}
@@ -209,6 +210,51 @@ public class Game {
 		}
 		return decoded;
 	}
+	public void saveGOL(Board board) throws Exception{
+                String name = (this.getInput() + ".gol");
+                File file = new File(name);
+                BufferedWriter writer = new BufferedWriter(new FileWriter(name));
+                writer.write(board.getHeight() + "," + board.getWidth());
+                writer.newLine();
+                for (int i = 0; i < board.getHeight(); i++){
+                        String line = "";
+                        for (int j = 0; j < board.getWidth(); j++){
+                                if (board.getIndex(i,j)){
+                                        line+= "1";
+                                } else {
+                                        line+= "0";
+                                }
+                        }
+                        writer.write(line);
+                        writer.newLine();
+                }
+                writer.close();
+        }
+	public List<Integer> decodeGOL(File file) throws Exception{
+                List<Integer> decoded = new ArrayList<>();
+                Scanner scan = new Scanner(file);
+                List<String> contents = new ArrayList<>();
+                while (scan.hasNextLine()){
+                        contents.add(scan.nextLine());
+                }
+                String[] dimensions = contents.get(0).split(",");
+                int height = Integer.valueOf(dimensions[0]);
+                int width = Integer.valueOf(dimensions[1]);
+                contents.remove(0);
+                decoded.add(height);
+                decoded.add(width);
+                for (int i = 0; i < contents.size(); i++){
+                        for (int j = 0; j < contents.get(i).length(); j++){
+                                String character = String.valueOf(contents.get(i).charAt(j));
+                                if (character.equals("1")){
+                                        decoded.add(i);
+                                        decoded.add(j);
+                                }
+                        }
+                }
+                return decoded;
+        }
+
 	public Board loadBoard(List<Integer> input){
 		List<Integer> decoded = new ArrayList<>(input);
 		Board loadingBoard = new Board();
@@ -225,11 +271,7 @@ public class Game {
 		}
 		return loadingBoard;
 	}
-	public Board getNextBoard(Board board) throws Exception{
-		Board newBoard = new Board();
-		newBoard.setHeight(board.getHeight());
-		newBoard.setWidth(board.getWidth());
-		newBoard.setArray(board.getArray());
+	public void updateBoard(Board board) throws Exception{
 		int[][] filled = new int[board.getHeight()][board.getWidth()];
 		for (int i = 0; i < board.getHeight(); i++){
 			for (int j = 0; j < board.getWidth(); j++){
@@ -240,13 +282,16 @@ public class Game {
 		for (int i = 0; i < board.getHeight(); i++){
 			for (int j = 0; j < board.getWidth(); j++){
 				if (board.getIndex(i,j) == true && filled[i][j] < this.x){
-					newBoard.swapIndex(i, j);
+					this.theoGUI.swapBoxColour(i, j);
+					board.swapIndex(i, j);
 				} else if (board.getIndex(i,j) == true && filled[i][j] >= this.x && filled[i][j] <= this.y){
 					//nothing happens
 				} else if (board.getIndex(i,j) == true && filled[i][j] > this.y){
-					newBoard.swapIndex(i,j);
+					this.theoGUI.swapBoxColour(i, j);
+					board.swapIndex(i,j);
 				} else if (board.getIndex(i,j) == false && filled[i][j] == this.z){
-					newBoard.swapIndex(i,j);
+					this.theoGUI.swapBoxColour(i, j);
+					board.swapIndex(i,j);
 				}
 			}
 		}
@@ -257,7 +302,6 @@ public class Game {
 			}
 			System.out.println("");
 		}*/
-		return newBoard;
 	}
 	public int scanBoard(Board board, int y, int x){
 		int number = 0;
