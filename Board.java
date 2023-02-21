@@ -27,9 +27,9 @@ public class Board implements Cloneable{
 		for (int i = 0; i < this.getHeight(); i++){
 			for(int j = 0; j < this.getWidth(); j++){
 				if (this.board[i][j]){
-					System.out.print(".");
-				} else {
 					System.out.print("O");
+				} else {
+					System.out.print(".");
 				}
 			}
 			System.out.println("");
