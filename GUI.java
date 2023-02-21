@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class GUI implements ActionListener{
     private int count;
-    private String gametype = "";
     private int[] parameters = new int[] {4,4,1,1,1};
     private Game game;
     public GUI(Game game) {
