@@ -163,7 +163,7 @@ public class GUI extends JPanel implements ActionListener {
                 gridButtons[i][j].addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
                         swapBoxColour(x, y);
-                        //board.swapIndex(x, y);
+                        board.swapIndex(x, y);
                     }
                 });
                 gridPanel.add(gridButtons[i][j]);
