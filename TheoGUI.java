@@ -22,6 +22,7 @@ public class TheoGUI{
         frame.setResizable(false);
         layout = new GridLayout(width, height);
         panel.setLayout(layout);
+        frame.add(panel);
         for (int i = 0; i < width; i++){
             for (int j = 0; j < height; j++){
                 final int x = i;
@@ -37,12 +38,13 @@ public class TheoGUI{
                 panel.add(buttons[i][j]);
             }
         }
-        frame.add(panel);
+        //frame.add(panel);
         panel.setVisible(true);
         frame.setVisible(true);
     }
 
     public void swapBoxColour(int y, int x){
+        System.out.println("changed" + x + " " + y);
         boolean on = this.board.getIndex(y, x);
         if (on){
             this.buttons[y][x].setBackground(Color.BLACK);

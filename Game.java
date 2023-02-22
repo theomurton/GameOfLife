@@ -12,20 +12,6 @@ import java.awt.event.*;
 
 import java.awt.event.ActionListener;
 
-/*
-class GameTypeButton implements ActionListener {
-	public void actionPerformed(ActionEvent e) {
-		String choice = e.getActionCommand();
-		if (choice.equals("New Game")) {
-			System.out.println("new");
-		}
-		if (choice.equals("Load Game")) {
-			System.out.println("load");
-		}
-	}
-}
-*/
-
 public class Game {
 	private int x;
 	private int y;
@@ -33,40 +19,61 @@ public class Game {
 	private int delay;
 	private boolean isQuit;
 	private boolean gameStart = false;
-	private GUI gui;
+	private IntroGUI introGUI;
+	private NewGameGUI newGameGUI;
+	private LoadGameGUI loadGameGUI;
 	private TheoGUI theoGUI;
 	private Board board;
-	public static void main (String[] args) throws Exception{
+	private String state;
+	public String getState(){
+		return this.state;
+	}
+	public void setState(String state){
+		this.state = state;
+	}
+		public static void main (String[] args) throws Exception{
 		Game game = new Game();
 		game.playGame();
 	}
 	public void playGame () throws Exception{
-		this.gui = new GUI(this);
-		gui.getGameType();
+		this.introGUI = new IntroGUI(this);
 		
 	}
 	public void newGame() throws Exception {
-		
+		if (this.getState() == "new"){
 		this.board = new Board();
-		int[] parameters = this.gui.getParameters();
+		int[] parameters = this.NewGameGUI.getParameters();
 		this.board.setHeight(parameters[0]);
 		this.board.setWidth(parameters[1]);
         this.board.setBoardSize(this.board.getHeight(), this.board.getWidth());
-            	this.board.printBoard();
-            	this.x = parameters[2];
-            	this.y = parameters[3];
-				this.z = parameters[4];
-				//this.setX();
-				//this.setY();
-            	//this.setZ();
+        this.board.printBoard();
+        this.x = parameters[2];
+        this.y = parameters[3];
+		this.z = parameters[4];
+		this.theoGUI = new TheoGUI(board.getHeight(), board.getWidth(), board);
 		this.board.swapIndex(0,0);
 		this.board.swapIndex(0,2);
 		this.board.swapIndex(1,1);
 		this.board.swapIndex(1,2);
 		this.board.swapIndex(2,1);
-		this.theoGUI = new TheoGUI(board.getHeight(), board.getWidth(), board);
+		this.theoGUI.swapBoxColour(0, 0);
+		this.theoGUI.swapBoxColour(0, 2);
+		this.theoGUI.swapBoxColour(1, 1);
+		this.theoGUI.swapBoxColour(1, 2);
+		this.theoGUI.swapBoxColour(2, 1);
 		this.gameLoop();
-		
+		} else {
+			this.board = new Board();
+		int[] parameters = this.gui.getParameters();
+		this.board.setHeight(parameters[0]);
+		this.board.setWidth(parameters[1]);
+        this.board.setBoardSize(this.board.getHeight(), this.board.getWidth());
+        this.board.printBoard();
+        this.x = parameters[2];
+        this.y = parameters[3];
+		this.z = parameters[4];
+		this.theoGUI = new TheoGUI(board.getHeight(), board.getWidth(), board);
+		}		
 	}
 	public void loadGame() throws Exception{
 		System.out.println("Supply file name for loading board.");
@@ -76,13 +83,15 @@ public class Game {
 		this.gameLoop();
 	}
 	public void gameLoop() throws Exception{
-		while (this.isQuit == false){
-			this.updateBoard(board);
+		for (int i = 0; i < 10; i++){
+			this.updateBoard(this.board);
+			System.out.println("here");
 			System.out.println("");
 			System.out.println("");
-			board.printBoard();
-			Thread.sleep(100);
+			this.board.printBoard();
+			Thread.sleep(600);
 		}
+		
 	}
 	public void setDelay(int delay){
 		this.delay = delay;
