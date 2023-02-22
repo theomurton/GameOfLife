@@ -1,11 +1,12 @@
 import javax.swing.*;
-
+import javax.swing.*;
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 public class NewGameGUI {
     private int count;
     private int[] parameters = new int[] {4,4,1,1,1};
@@ -16,7 +17,8 @@ public class NewGameGUI {
         SpringLayout layout = new SpringLayout();
         
         setup2Frame.setSize(300,300);
-        Container contentPane = setup2Frame.getContentPane();
+        JPanel contentPane = new JPanel();
+
         contentPane.setLayout(layout);
 
         
@@ -33,11 +35,11 @@ public class NewGameGUI {
         for(int i = 4; i <= 50; i++) {
             sizeChoices[i - 4] = Integer.toString(i);
         }
-        final JComboBox<String> heightBox = new JComboBox<String>(sizeChoices);
-        final JComboBox<String> widthBox = new JComboBox<String>(sizeChoices);
-        final JComboBox<String> xBox = new JComboBox<String>(intChoices);
-        final JComboBox<String> yBox = new JComboBox<String>(intChoices);
-        final JComboBox<String> zBox = new JComboBox<String>(intChoices);
+        JComboBox<String> heightBox = new JComboBox<String>(sizeChoices);
+        JComboBox<String> widthBox = new JComboBox<String>(sizeChoices);
+        JComboBox<String> xBox = new JComboBox<String>(intChoices);
+        JComboBox<String> yBox = new JComboBox<String>(intChoices);
+        JComboBox<String> zBox = new JComboBox<String>(intChoices);
         heightBox.addItemListener( new ItemListener() {
             public void itemStateChanged(ItemEvent itemEvent) {
                 parameters[0] = Integer.parseInt((String)heightBox.getSelectedItem());
@@ -116,19 +118,20 @@ public class NewGameGUI {
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     try{
-                    game.newGame();
-                    setup2Frame.dispose();}
+                        setup2Frame.dispose();
+                    game.setParameters(parameters);
+                    game.newGame();}
                     catch (Exception exce){
                         System.exit(0);
                     }
                 }
             }
         );
-        setup2Frame.getContentPane().add(confirmButton);
+        contentPane.add(confirmButton);
 
         layout.putConstraint(SpringLayout.NORTH, confirmButton, 20, SpringLayout.SOUTH, xBox);
         layout.putConstraint(SpringLayout.WEST, confirmButton, 40, SpringLayout.SOUTH, xBox);
-
+        setup2Frame.add(contentPane);
         setup2Frame.setVisible(true);
     
     }

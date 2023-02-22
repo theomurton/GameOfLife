@@ -24,9 +24,13 @@ public class Game {
 	private LoadGameGUI loadGameGUI;
 	private TheoGUI theoGUI;
 	private Board board;
-	private String state;
+	private String state = "new";
+	private int[] parameters = {10, 20, 2, 3, 3};
 	public String getState(){
 		return this.state;
+	}
+	public void setParameters(int[] parameters){
+		this.parameters = parameters;
 	}
 	public void setState(String state){
 		this.state = state;
@@ -36,20 +40,20 @@ public class Game {
 		game.playGame();
 	}
 	public void playGame () throws Exception{
-		this.introGUI = new IntroGUI(this);
+	this.newGameGUI = new NewGameGUI(this);
+		//this.newGame();
 		
 	}
 	public void newGame() throws Exception {
 		if (this.getState() == "new"){
 		this.board = new Board();
-		int[] parameters = this.NewGameGUI.getParameters();
-		this.board.setHeight(parameters[0]);
-		this.board.setWidth(parameters[1]);
+		this.board.setHeight(this.parameters[0]);
+		this.board.setWidth(this.parameters[1]);
         this.board.setBoardSize(this.board.getHeight(), this.board.getWidth());
         this.board.printBoard();
-        this.x = parameters[2];
-        this.y = parameters[3];
-		this.z = parameters[4];
+        this.x = this.parameters[2];
+        this.y = this.parameters[3];
+		this.z = this.parameters[4];
 		this.theoGUI = new TheoGUI(board.getHeight(), board.getWidth(), board);
 		this.board.swapIndex(0,0);
 		this.board.swapIndex(0,2);
@@ -64,14 +68,14 @@ public class Game {
 		this.gameLoop();
 		} else {
 			this.board = new Board();
-		int[] parameters = this.gui.getParameters();
-		this.board.setHeight(parameters[0]);
-		this.board.setWidth(parameters[1]);
+		
+		this.board.setHeight(this.parameters[0]);
+		this.board.setWidth(this.parameters[1]);
         this.board.setBoardSize(this.board.getHeight(), this.board.getWidth());
         this.board.printBoard();
-        this.x = parameters[2];
-        this.y = parameters[3];
-		this.z = parameters[4];
+        this.x = this.parameters[2];
+        this.y = this.parameters[3];
+		this.z = this.parameters[4];
 		this.theoGUI = new TheoGUI(board.getHeight(), board.getWidth(), board);
 		}		
 	}

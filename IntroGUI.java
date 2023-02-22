@@ -23,7 +23,7 @@ public class IntroGUI {
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     game.setState("new");
-                    NewGameGUI ngg = new NewGameGUI(this.game);
+                    //NewGameGUI newGUI = new NewGameGUI(game);
                     setup1Frame.dispose();
                 }
             }
@@ -35,7 +35,7 @@ public class IntroGUI {
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     game.setState("load");
-                    loadGameGUI();
+                    //LoadGameGUI loadGUI = new LoadGameGUI(game);
                     setup1Frame.dispose();
                 }
             }
